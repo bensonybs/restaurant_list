@@ -8,7 +8,6 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 //Set static file
 app.use(express.static('public'))
-
 //Routes
 app.get('/', (req, res) => {
   const restaurants = restaurantList.results
