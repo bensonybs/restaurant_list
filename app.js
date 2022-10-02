@@ -15,10 +15,16 @@ app.get('/', (req, res) => {
 })
 app.get('/restaurants/:restaurant_id', (req, res) => {
   const restaurant = restaurantList.results.find(restaurant => restaurant.id.toString() === req.params.restaurant_id)
-  // Check validity of query
   res.render('show', { restaurant: restaurant })
 })
-
+app.get('/search', (req, res) => {
+  const keyword = req.query.keyword
+  //Search in list for English and Chinese restaurant name
+  const restaurants = restaurantList.results.filter(restaurant => {
+    return (restaurant.name.toLowerCase().includes(keyword.toLowerCase())) || (restaurant.name_en.toLowerCase().includes(keyword.toLowerCase()))
+  })
+  res.render('index', { restaurants: restaurants, keyword: keyword })
+})
 
 
 
