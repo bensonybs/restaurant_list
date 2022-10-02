@@ -3,6 +3,7 @@ A list which user can search for restaurant and see detail imfomation of it.
 This is a express web app from [AlphaCamp](https://tw.alphacamp.co/).   
 ## Demo
 ![demo](/public/image/demo.gif)
+You can also see the websit in [Replit](https://replit.com/@bensonybs/restaurantlist).
 ## Features
 - Searching restaurants in both English and Chinese  name.
 ## Getting Start
