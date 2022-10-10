@@ -1,8 +1,18 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
+const mongoose = require('mongoose')
 const app = express()
 const PORT = 3000
-const restaurantList = require('./restaurant.json')
+const Restaurant = require('./models/restaurant.js') //Import restaurant model
+//Set mongoose
+mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', () => {
+  console.log('mongo connect error!')
+})
+db.once('open', () => {
+  console.log('mongo connected!')
+})
 //Set view engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
@@ -10,20 +20,27 @@ app.set('view engine', 'handlebars')
 app.use(express.static('public'))
 //Routes
 app.get('/', (req, res) => {
-  const restaurants = restaurantList.results
-  res.render('index', { restaurants: restaurants })
+  return Restaurant.find()
+    .lean()
+    .sort({ '_id': 'asc' })
+    .then(restaurants => { res.render('index', { restaurants }) })
+    .catch(error => console.log(error))
 })
 app.get('/restaurants/:restaurant_id', (req, res) => {
-  const restaurant = restaurantList.results.find(restaurant => restaurant.id.toString() === req.params.restaurant_id)
-  res.render('show', { restaurant: restaurant })
+  const id = req.params.restaurant_id
+  Restaurant.findById(id)
+    .lean()
+    .then(restaurant => { res.render('show', { restaurant }) })
+    .catch(error => console.log(error))
+
 })
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword
-  //Search in list for English and Chinese restaurant name
-  const restaurants = restaurantList.results.filter(restaurant => {
-    return (restaurant.name.toLowerCase().includes(keyword.toLowerCase())) || (restaurant.name_en.toLowerCase().includes(keyword.toLowerCase()))
-  })
-  res.render('index', { restaurants: restaurants, keyword: keyword })
+  //Search in mongodb for restaurant name
+  Restaurant.find({name: {$regex: keyword, $options: 'i'}})
+    .lean()
+    .then(restaurants => res.render('index', { restaurants, keyword }))
+    .catch(error => console.log(error))
 })
 
 
