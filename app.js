@@ -19,6 +19,8 @@ app.use(methodOverride('_method'))
 //Set view engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
+// Set body parser
+app.use(express.urlencoded({ extended: true }))
 //Set static file
 app.use(express.static('public'))
 //Routes
@@ -28,6 +30,15 @@ app.get('/', (req, res) => {
     .lean()
     .sort({ '_id': 'asc' })
     .then(restaurants => { res.render('index', { restaurants }) })
+    .catch(error => console.log(error))
+})
+//Create new restaurant
+app.get('/restaurants/new', (req, res) => {
+  res.render('new')
+})
+app.post('/restaurants', (req, res) => {
+  Restaurant.create(req.body)
+    .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 //Show restaurant detail
