@@ -43,7 +43,6 @@ app.post('/restaurants', (req, res) => {
       delete req.body[prop]
     }
   }
-  console.log(req.body)
   Restaurant.create(req.body)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
@@ -55,7 +54,26 @@ app.get('/restaurants/:restaurant_id', (req, res) => {
     .lean()
     .then(restaurant => { res.render('show', { restaurant }) })
     .catch(error => console.log(error))
-
+  })
+//Update restaurant
+app.get('/restaurants/:restaurant_id/edit', (req, res) => {
+  const id = req.params.restaurant_id
+  Restaurant.findById(id)
+    .lean()
+    .then(restaurant => res.render('edit', {restaurant}))
+    .catch(error => console.log(error))
+})
+app.post('/restaurants/:restaurant_id', (req, res) => {
+  const id = req.params.restaurant_id
+  Restaurant.findById(id)
+    .then(restaurant => {
+      for (let prop in req.body) {
+        restaurant[prop] = req.body[prop]
+      }
+      return restaurant.save()
+    })
+    .then(() => res.redirect(`/restaurants/${id}`))
+    .catch(error => console.log(error))
 })
 //Delete restaurant
 app.delete('/restaurants/:restaurant_id', (req, res) => {
