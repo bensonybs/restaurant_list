@@ -37,6 +37,13 @@ app.get('/restaurants/new', (req, res) => {
   res.render('new')
 })
 app.post('/restaurants', (req, res) => {
+  //Delete property of restaurant object with empty input value
+  for (let prop in req.body) {
+    if (req.body[prop] === '') {
+      delete req.body[prop]
+    }
+  }
+  console.log(req.body)
   Restaurant.create(req.body)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
