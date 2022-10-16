@@ -2,9 +2,10 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
+const routes = require('./routes')
 const app = express()
 const PORT = 3000
-const Restaurant = require('./models/restaurant.js') //Import restaurant model
+
 //Set mongoose
 mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
 const db = mongoose.connection
@@ -17,88 +18,14 @@ db.once('open', () => {
 //Set method override
 app.use(methodOverride('_method'))
 //Set view engine
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-app.set('view engine', 'handlebars')
-// Set body parser
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
+//Set body parser
 app.use(express.urlencoded({ extended: true }))
 //Set static file
 app.use(express.static('public'))
-//Routes
-//Get all restaurants
-app.get('/', (req, res) => {
-  return Restaurant.find()
-    .lean()
-    .sort({ '_id': 'asc' })
-    .then(restaurants => { res.render('index', { restaurants }) })
-    .catch(error => console.log(error))
-})
-//Create new restaurant
-app.get('/restaurants/new', (req, res) => {
-  res.render('new')
-})
-app.post('/restaurants', (req, res) => {
-  //Delete property of restaurant object with empty input value
-  for (let prop in req.body) {
-    if (req.body[prop] === '') {
-      delete req.body[prop]
-    }
-  }
-  Restaurant.create(req.body)
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-//Show restaurant detail
-app.get('/restaurants/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
-    .lean()
-    .then(restaurant => { res.render('show', { restaurant }) })
-    .catch(error => console.log(error))
-  })
-//Update restaurant
-app.get('/restaurants/:restaurant_id/edit', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
-    .lean()
-    .then(restaurant => res.render('edit', {restaurant}))
-    .catch(error => console.log(error))
-})
-app.post('/restaurants/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
-    .then(restaurant => {
-      for (let prop in req.body) {
-        restaurant[prop] = req.body[prop]
-      }
-      return restaurant.save()
-    })
-    .then(() => res.redirect(`/restaurants/${id}`))
-    .catch(error => console.log(error))
-})
-//Delete restaurant
-app.delete('/restaurants/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
-    .then(restaurant => { restaurant.remove() })
-    .then(() => {
-      res.redirect('/')
-    })
-    .catch(error => console.log(error))
-})
-//Search for restaurants
-app.get('/search', (req, res) => {
-  const keyword = req.query.keyword
-  //Search in mongodb for restaurant name
-  Restaurant.find({ name: { $regex: keyword, $options: 'i' } })
-    .lean()
-    .then(restaurants => res.render('index', { restaurants, keyword }))
-    .catch(error => console.log(error))
-})
-
-
-
-
-
+//Set routes
+app.use(routes)
 
 app.listen(PORT, () => {
   console.log(`Express is running on http://localhost:${PORT}`);
