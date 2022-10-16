@@ -49,7 +49,7 @@ router.post('/:restaurant_id', (req, res) => {
 router.delete('/:restaurant_id', (req, res) => {
   const id = req.params.restaurant_id
   Restaurant.findById(id)
-    .then(restaurant => { restaurant.remove() })
+    .then(restaurant => { return restaurant.remove() })
     .then(() => {
       res.redirect('/')
     })
