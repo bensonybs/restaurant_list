@@ -19,5 +19,17 @@ router.get('/search', (req, res) => {
     .then(restaurants => res.render('index', { restaurants, keyword }))
     .catch(error => console.log(error))
 })
+//Sorting the restaurants
+router.get('/sorting', (req, res) => {
+  const sortBy = req.query.by
+  const order = req.query.order
+  const sortCondition = {}
+  sortCondition[sortBy] = order
+  return Restaurant.find()
+    .lean()
+    .sort(sortCondition)
+    .then(restaurants => { res.render('index', { restaurants }) })
+    .catch(error => console.log(error))
+})
 
 module.exports = router

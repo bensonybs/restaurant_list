@@ -12,6 +12,18 @@
           </div>
         </div>
       </form>
+      <div class="dropdown mt-1">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          排序方式
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="/sorting?by=name&order=asc">依餐廳名稱</a>
+          <a class="dropdown-item" href="/sorting?by=category&order=asc">依餐廳類別</a>
+          <a class="dropdown-item" href="/sorting?by=rating&order=desc">依評分(高 -> 低)</a>
+          <a class="dropdown-item" href="/sorting?by=rating&order=asc">依評分(低 -> 高)</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
