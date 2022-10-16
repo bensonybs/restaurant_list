@@ -1,20 +1,12 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
-const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const routes = require('./routes')
 const app = express()
 const PORT = 3000
 
 //Set mongoose
-mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
-const db = mongoose.connection
-db.on('error', () => {
-  console.log('mongo connect error!')
-})
-db.once('open', () => {
-  console.log('mongo connected!')
-})
+require('./config/mongoose.js')
 //Set method override
 app.use(methodOverride('_method'))
 //Set view engine

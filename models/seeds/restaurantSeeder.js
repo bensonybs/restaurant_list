@@ -1,12 +1,7 @@
-const mongoose = require('mongoose')
 const Restaurant = require('../restaurant.js') //Import restaurant model
 const restaurantSeedData = require('../../restaurant.json')
-mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
-const db = mongoose.connection
+const db = require('../../config/mongoose.js')
 
-db.on('error', () => {
-  console.log('mongo connect error!')
-})
 db.once('open', () => {
   for (const data of restaurantSeedData.results) {
     Restaurant.create({
