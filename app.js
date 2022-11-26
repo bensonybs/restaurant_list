@@ -26,6 +26,12 @@ usePassport(app)
 app.use(express.urlencoded({ extended: true }))
 // Set static file
 app.use(express.static('public'))
+// Set locals middleware
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user
+  next()
+})
 // Set routes
 app.use(routes)
 
