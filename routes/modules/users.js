@@ -38,10 +38,11 @@ router.route('/login')
     successRedirect: '/',
     failureRedirect: '/users/login'
   }))
-// GET:
-router.route('logout')
+// GET: User logout
+router.route('/logout')
   .get((req, res, next) => {
-
+    req.logout()
+    res.redirect('/users/login')
   })
 
 module.exports = router

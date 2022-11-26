@@ -11,8 +11,6 @@ const PORT = 3000
 require('./config/mongoose.js')
 // Set method override
 app.use(methodOverride('_method'))
-// Set passport
-usePassport(app)
 // Set view engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
@@ -22,6 +20,8 @@ app.use(session({
   resave: false, //強制將session更新到session store內，參考 https://www.npmjs.com/package/express-session#resave
   saveUninitialized: true //強制將未初始化的session存回store內，參考 https://www.npmjs.com/package/express-session#saveuninitialized
 }))
+// Set passport
+usePassport(app)
 // Set body parser
 app.use(express.urlencoded({ extended: true }))
 // Set static file
