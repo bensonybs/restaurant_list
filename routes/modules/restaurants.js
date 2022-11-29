@@ -37,7 +37,7 @@ router.get('/:restaurant_id/edit', (req, res) => {
     .then(restaurant => res.render('edit', { restaurant }))
     .catch(error => console.log(error))
 })
-router.post('/:restaurant_id', (req, res) => {
+router.put('/:restaurant_id', (req, res) => {
   const userId = req.user._id
   const _id = req.params.restaurant_id
   Restaurant.findOne({ _id, userId })
