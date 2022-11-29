@@ -11,22 +11,39 @@ router.route('/register')
   })
   .post((req, res, next) => {
     const { name, email, password, confirmPassword } = req.body
-    //Check user existence
+    const errors = []
+    // Check register data
+    if (!name || !email || !password || !confirmPassword) {
+      errors.push({ message: '所有欄位皆為必填' })
+    }
+    if (password !== confirmPassword) {
+      errors.push({ message: '密碼與確認密碼不同，請重新輸入' })
+    }
+    if (errors.length) {
+      return res.render('register', {
+        errors,
+        name,
+        email,
+        password,
+        confirmPassword
+      })
+    }
     User.findOne({ email }).then(user => {
+      // Check user existence
       if (user) {
-        res.render('register', {
+        errors.push({ message: '此 Email 已被註冊過，請重新輸入' })
+        return res.render('register', {
           name,
           email,
           password,
           confirmPassword
         })
-      } else {
-        return User.create({ name, email, password })
-          .then(() => { res.redirect('/') })
-          .catch(err => console.log(err))
       }
-    }
-    ).catch(err => console.log(err))
+      return User.create({ name, email, password })
+        .then(() => { res.redirect('/') })
+        .catch(err => console.log(err))
+    })
+      .catch(err => console.log(err))
   })
 // GET: Login page
 // POST: User login
@@ -42,6 +59,7 @@ router.route('/login')
 router.route('/logout')
   .get((req, res, next) => {
     req.logout()
+    req.flash('success_msg', '系統已成功登出')
     res.redirect('/users/login')
   })
 
