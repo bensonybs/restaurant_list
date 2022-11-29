@@ -13,42 +13,48 @@ router.post('/', (req, res) => {
       delete req.body[prop]
     }
   }
-  Restaurant.create(req.body)
+  // Add user id
+  req.body.userId = req.user._id
+  return Restaurant.create(req.body)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 //Show restaurant detail
 router.get('/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.restaurant_id
+  Restaurant.findOne({ _id, userId }) // Change findById() to findOne() to apply multiple query condition
     .lean()
     .then(restaurant => { res.render('show', { restaurant }) })
     .catch(error => console.log(error))
-  })
+})
 //Update restaurant
 router.get('/:restaurant_id/edit', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.restaurant_id
+  Restaurant.findOne({ _id, userId })
     .lean()
-    .then(restaurant => res.render('edit', {restaurant}))
+    .then(restaurant => res.render('edit', { restaurant }))
     .catch(error => console.log(error))
 })
 router.post('/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.restaurant_id
+  Restaurant.findOne({ _id, userId })
     .then(restaurant => {
       for (let prop in req.body) {
         restaurant[prop] = req.body[prop]
       }
       return restaurant.save()
     })
-    .then(() => res.redirect(`/restaurants/${id}`))
+    .then(() => res.redirect(`/restaurants/${_id}`))
     .catch(error => console.log(error))
 })
 //Delete restaurant
 router.delete('/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
-  Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.restaurant_id
+  Restaurant.findOne({ _id, userId })
     .then(restaurant => { return restaurant.remove() })
     .then(() => {
       res.redirect('/')
