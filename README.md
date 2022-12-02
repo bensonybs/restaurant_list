@@ -7,6 +7,7 @@ You can also see the website in [Replit](https://replit.com/@bensonybs/restauran
 ## Features
 - Create, read, update, delete restaurant information.
 - Searching restaurants in name.
+- User authentication: You can login with email or Facebook now. (**New Feature**)
 ## Getting Start
 ### Prerequisite
 1. [Node.js](https://nodejs.org/en/), v14.16.0
@@ -26,10 +27,10 @@ You can also see the website in [Replit](https://replit.com/@bensonybs/restauran
 
 ## Packages
 ### Node.js
-- [Express](https://www.npmjs.com/package/express/v/4.16.4), 4.16.4
-- [Express Handlebars](https://www.npmjs.com/package/express-handlebars/v/3.0.0), 3.0.0
-- [Method Override](https://www.npmjs.com/package/method-override/v/3.0.0), 3.0.0
-- [Mongoose](https://www.npmjs.com/package/mongoose/v/5.9.7), 5.9.7
+Watch all packages installed in package.json
 ### Others
 - [Bootstrap](https://getbootstrap.com/), 4.3.1
 - [Font Awesome](https://fontawesome.com/), 5.8.1
+
+## Future Updates
+1. [Passport Error Message(S1U34)](https://stackoverflow.com/questions/52567859/how-to-flash-a-message-from-passport-js) 
