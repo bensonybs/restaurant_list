@@ -26,7 +26,8 @@ router.get('/sorting', (req, res) => {
   const order = req.query.order
   const sortCondition = {}
   sortCondition[sortBy] = order
-  return Restaurant.find()
+  const userId = req.user._id
+  return Restaurant.find({ userId })
     .lean()
     .sort(sortCondition)
     .then(restaurants => { res.render('index', { restaurants }) })
