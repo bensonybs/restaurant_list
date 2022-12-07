@@ -14,8 +14,8 @@ router.route('/register')
     const { name, email, password, confirmPassword } = req.body
     const errors = []
     // Check register data
-    if (!name || !email || !password || !confirmPassword) {
-      errors.push({ message: '所有欄位皆為必填' })
+    if (!email || !password || !confirmPassword) {
+      errors.push({ message: '除了名稱以外，所有欄位皆為必填' })
     }
     if (password !== confirmPassword) {
       errors.push({ message: '密碼與確認密碼不同，請重新輸入' })
@@ -34,6 +34,7 @@ router.route('/register')
       if (user) {
         errors.push({ message: '此 Email 已被註冊過，請重新輸入' })
         return res.render('register', {
+          errors,
           name,
           email,
           password,
@@ -48,7 +49,10 @@ router.route('/register')
           email,
           password: hash
         }))
-        .then(() => { res.redirect('/') })
+        .then(() => {
+          req.flash('success_msg', '帳號註冊成功，請登入')
+          res.redirect('/users/login')
+        })
         .catch(err => console.log(err))
     })
       .catch(err => console.log(err))

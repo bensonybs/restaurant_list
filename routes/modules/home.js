@@ -13,9 +13,10 @@ router.get('/', (req, res) => {
 })
 //Search for restaurants
 router.get('/search', (req, res) => {
+  const userId = req.user._id
   const keyword = req.query.keyword
   //Search in mongodb for restaurant name
-  Restaurant.find({ name: { $regex: keyword, $options: 'i' } })
+  Restaurant.find({ name: { $regex: keyword, $options: 'i' }, userId })
     .lean()
     .then(restaurants => res.render('index', { restaurants, keyword }))
     .catch(error => console.log(error))
