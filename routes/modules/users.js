@@ -34,6 +34,7 @@ router.route('/register')
       if (user) {
         errors.push({ message: '此 Email 已被註冊過，請重新輸入' })
         return res.render('register', {
+          errors,
           name,
           email,
           password,
@@ -48,7 +49,10 @@ router.route('/register')
           email,
           password: hash
         }))
-        .then(() => { res.redirect('/') })
+        .then(() => {
+          req.flash('success_msg', '帳號註冊成功，請登入')
+          res.redirect('/users/login')
+        })
         .catch(err => console.log(err))
     })
       .catch(err => console.log(err))
