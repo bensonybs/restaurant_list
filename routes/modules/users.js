@@ -14,8 +14,8 @@ router.route('/register')
     const { name, email, password, confirmPassword } = req.body
     const errors = []
     // Check register data
-    if (!name || !email || !password || !confirmPassword) {
-      errors.push({ message: '所有欄位皆為必填' })
+    if (!email || !password || !confirmPassword) {
+      errors.push({ message: '除了名稱以外，所有欄位皆為必填' })
     }
     if (password !== confirmPassword) {
       errors.push({ message: '密碼與確認密碼不同，請重新輸入' })
